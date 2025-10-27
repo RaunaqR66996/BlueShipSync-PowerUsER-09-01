@@ -14,70 +14,70 @@ export function BlueShipSyncLogo({ className = '', size = 40 }: LogoProps) {
       className={className}
       xmlns="http://www.w3.org/2000/svg"
     >
-      {/* Outer circle */}
+      {/* Outer circle border - white */}
       <circle
         cx="50"
         cy="50"
         r="48"
         fill="none"
-        stroke="currentColor"
+        stroke="#FFFFFF"
         strokeWidth="2"
       />
       
-      {/* Container Ship */}
+      {/* Container Ship - white with black details */}
       {/* Ship hull */}
       <rect
         x="35"
         y="60"
         width="30"
         height="8"
-        fill="currentColor"
+        fill="#FFFFFF"
         rx="1"
       />
       
-      {/* Ship bow details */}
-      <rect x="35" y="62" width="2" height="2" fill="black" />
-      <rect x="35" y="64" width="2" height="2" fill="black" />
+      {/* Ship bow details - black */}
+      <rect x="35" y="62" width="2" height="2" fill="#000000" />
+      <rect x="35" y="64" width="2" height="2" fill="#000000" />
       
-      {/* Container stacks */}
+      {/* Container stacks - white with black outlines */}
       {/* Left stack */}
-      <rect x="38" y="45" width="6" height="15" fill="currentColor" stroke="black" strokeWidth="0.5" />
-      <rect x="38" y="50" width="6" height="10" fill="currentColor" stroke="black" strokeWidth="0.5" />
-      <rect x="38" y="55" width="6" height="5" fill="currentColor" stroke="black" strokeWidth="0.5" />
+      <rect x="38" y="45" width="6" height="15" fill="#FFFFFF" stroke="#000000" strokeWidth="0.5" />
+      <rect x="38" y="50" width="6" height="10" fill="#FFFFFF" stroke="#000000" strokeWidth="0.5" />
+      <rect x="38" y="55" width="6" height="5" fill="#FFFFFF" stroke="#000000" strokeWidth="0.5" />
       
       {/* Center stack */}
-      <rect x="47" y="40" width="6" height="20" fill="currentColor" stroke="black" strokeWidth="0.5" />
-      <rect x="47" y="45" width="6" height="15" fill="currentColor" stroke="black" strokeWidth="0.5" />
-      <rect x="47" y="50" width="6" height="10" fill="currentColor" stroke="black" strokeWidth="0.5" />
+      <rect x="47" y="40" width="6" height="20" fill="#FFFFFF" stroke="#000000" strokeWidth="0.5" />
+      <rect x="47" y="45" width="6" height="15" fill="#FFFFFF" stroke="#000000" strokeWidth="0.5" />
+      <rect x="47" y="50" width="6" height="10" fill="#FFFFFF" stroke="#000000" strokeWidth="0.5" />
       
       {/* Right stack */}
-      <rect x="56" y="45" width="6" height="15" fill="currentColor" stroke="black" strokeWidth="0.5" />
-      <rect x="56" y="50" width="6" height="10" fill="currentColor" stroke="black" strokeWidth="0.5" />
-      <rect x="56" y="55" width="6" height="5" fill="currentColor" stroke="black" strokeWidth="0.5" />
+      <rect x="56" y="45" width="6" height="15" fill="#FFFFFF" stroke="#000000" strokeWidth="0.5" />
+      <rect x="56" y="50" width="6" height="10" fill="#FFFFFF" stroke="#000000" strokeWidth="0.5" />
+      <rect x="56" y="55" width="6" height="5" fill="#FFFFFF" stroke="#000000" strokeWidth="0.5" />
       
-      {/* Ship superstructure */}
+      {/* Ship superstructure/bridge - white with black windows */}
       <rect
         x="42"
         y="35"
         width="16"
         height="10"
-        fill="currentColor"
+        fill="#FFFFFF"
         rx="1"
       />
       
-      {/* Bridge windows */}
-      <rect x="44" y="37" width="2" height="2" fill="black" />
-      <rect x="47" y="37" width="2" height="2" fill="black" />
-      <rect x="50" y="37" width="2" height="2" fill="black" />
-      <rect x="53" y="37" width="2" height="2" fill="black" />
+      {/* Bridge windows - black */}
+      <rect x="44" y="37" width="2" height="2" fill="#000000" />
+      <rect x="47" y="37" width="2" height="2" fill="#000000" />
+      <rect x="50" y="37" width="2" height="2" fill="#000000" />
+      <rect x="53" y="37" width="2" height="2" fill="#000000" />
       
-      {/* Mast */}
-      <rect x="49" y="25" width="2" height="10" fill="currentColor" />
-      <rect x="47" y="27" width="6" height="1" fill="currentColor" />
-      <rect x="47" y="30" width="6" height="1" fill="currentColor" />
-      <rect x="47" y="33" width="6" height="1" fill="currentColor" />
+      {/* Mast - white */}
+      <rect x="49" y="25" width="2" height="10" fill="#FFFFFF" />
+      <rect x="47" y="27" width="6" height="1" fill="#FFFFFF" />
+      <rect x="47" y="30" width="6" height="1" fill="#FFFFFF" />
+      <rect x="47" y="33" width="6" height="1" fill="#FFFFFF" />
       
-      {/* Dynamic Blue Arrows */}
+      {/* Dynamic Blue Arrows - exactly as in original */}
       {/* Upper-left arrow */}
       <path
         d="M 25 35 Q 15 15 35 25"
