@@ -1,0 +1,244 @@
+// Blue Ship Sync - Production-Grade Prisma Schema
+// AI-native TMS and WMS platform with multi-tenant support
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               String             @id @default(uuid())
+  email            String             @unique
+  name             String?
+  company          String?
+  role             UserRole           @default(OPERATOR)
+  subscriptionTier SubscriptionTier  @default(FREE)
+  trialEndsAt      DateTime?
+  warehouses       Warehouse[]
+  products         Product[]
+  customers        Customer[]
+  orders           Order[]
+  chatMessages     ChatMessage[]
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+
+  @@index([email], name: "user_email_idx")
+  @@map("users")
+}
+
+model Warehouse {
+  id             String           @id @default(uuid())
+  userId         String
+  user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name           String
+  address        String
+  city           String
+  state          String
+  zipCode        String
+  country        String
+  totalSpace     Int              // sq ft
+  usedSpace      Int              @default(0)
+  utilizationPct Float            @default(0.0)
+  status         WarehouseStatus  @default(ACTIVE)
+  products       Inventory[]
+  shipments      Shipment[]
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+
+  @@index([userId], name: "warehouse_user_idx")
+  @@map("warehouses")
+}
+
+model Product {
+  id          String       @id @default(uuid())
+  userId      String
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sku         String       @unique
+  name        String
+  description String?
+  category    String?
+  weight      Float?
+  dimensions  Json?        // {length, width, height}
+  unitPrice   Float
+  imageUrl    String?
+  inventories Inventory[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  @@index([sku], name: "product_sku_idx")
+  @@index([userId], name: "product_user_idx")
+  @@map("products")
+}
+
+model Inventory {
+  id            String           @id @default(uuid())
+  warehouseId   String
+  warehouse     Warehouse        @relation(fields: [warehouseId], references: [id], onDelete: Cascade)
+  productId     String
+  product       Product          @relation(fields: [productId], references: [id], onDelete: Cascade)
+  quantity      Int
+  binLocation   String
+  status        InventoryStatus  @default(AVAILABLE)
+  lastCountedAt DateTime?
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+
+  @@unique([warehouseId, productId], name: "inventory_warehouse_product_unique")
+  @@index([warehouseId], name: "inventory_warehouse_idx")
+  @@index([productId], name: "inventory_product_idx")
+  @@index([status], name: "inventory_status_idx")
+  @@map("inventory")
+}
+
+model Customer {
+  id                String   @id @default(uuid())
+  userId            String
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name              String
+  email             String?
+  phone             String?
+  shippingAddress   Json?    // {street, city, state, zip, country}
+  billingAddress    Json?    // {street, city, state, zip, country}
+  preferredCarrier  String?
+  orders            Order[]
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([userId], name: "customer_user_idx")
+  @@index([email], name: "customer_email_idx")
+  @@map("customers")
+}
+
+model Carrier {
+  id            String      @id @default(uuid())
+  name          String      // e.g. UPS, FedEx, DHL
+  serviceLevel  String      // e.g. Ground, Express, Overnight
+  estimatedDays Int?
+  baseRate      Float?
+  perPoundRate   Float?
+  shipments     Shipment[]
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@index([name], name: "carrier_name_idx")
+  @@map("carriers")
+}
+
+model Order {
+  id          String      @id @default(uuid())
+  userId      String
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  customerId  String
+  customer    Customer    @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  orderNumber String      @unique
+  status      OrderStatus @default(PENDING)
+  items       Json        // [{sku, qty, unitPrice, totalPrice}]
+  totalAmount Float
+  shipments   Shipment[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@index([orderNumber], name: "order_number_idx")
+  @@index([userId], name: "order_user_idx")
+  @@index([customerId], name: "order_customer_idx")
+  @@index([status], name: "order_status_idx")
+  @@map("orders")
+}
+
+model Shipment {
+  id                    String          @id @default(uuid())
+  orderId               String
+  order                 Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  warehouseId           String
+  warehouse             Warehouse       @relation(fields: [warehouseId], references: [id], onDelete: Cascade)
+  carrierId             String
+  carrier               Carrier         @relation(fields: [carrierId], references: [id])
+  trackingNumber        String          @unique
+  status                ShipmentStatus  @default(CREATED)
+  weight                Float?
+  dimensions            Json?           // {length, width, height}
+  shippingCost          Float?
+  labelUrl              String?
+  estimatedDeliveryDate DateTime?
+  actualDeliveryDate     DateTime?
+  createdAt             DateTime        @default(now())
+  updatedAt             DateTime        @updatedAt
+
+  @@index([trackingNumber], name: "shipment_tracking_idx")
+  @@index([orderId], name: "shipment_order_idx")
+  @@index([warehouseId], name: "shipment_warehouse_idx")
+  @@index([carrierId], name: "shipment_carrier_idx")
+  @@index([status], name: "shipment_status_idx")
+  @@map("shipments")
+}
+
+model ChatMessage {
+  id        String    @id @default(uuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role      ChatRole  @default(USER)
+  content   String
+  metadata  Json?     // Additional context, AI responses, etc.
+  createdAt DateTime  @default(now())
+
+  @@index([userId], name: "chat_user_idx")
+  @@index([createdAt], name: "chat_created_at_idx")
+  @@map("chat_messages")
+}
+
+// Enums
+enum UserRole {
+  ADMIN
+  MANAGER
+  OPERATOR
+}
+
+enum SubscriptionTier {
+  FREE
+  BASIC
+  NORMAL
+  PRO
+}
+
+enum WarehouseStatus {
+  ACTIVE
+  INACTIVE
+  MAINTENANCE
+}
+
+enum InventoryStatus {
+  AVAILABLE
+  RESERVED
+  DAMAGED
+  QUARANTINE
+  EXPIRED
+}
+
+enum OrderStatus {
+  PENDING
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+enum ShipmentStatus {
+  CREATED
+  PICKED
+  PACKED
+  SHIPPED
+  IN_TRANSIT
+  DELIVERED
+  RETURNED
+  CANCELLED
+}
+
+enum ChatRole {
+  USER
+  ASSISTANT
+  SYSTEM
+}
