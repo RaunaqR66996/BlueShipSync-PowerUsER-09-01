@@ -3,6 +3,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { BlueShipSyncLogo } from '@/components/ui/logo';
 import Link from 'next/link';
 
 export default function LandingPage(): JSX.Element {
@@ -11,7 +12,10 @@ export default function LandingPage(): JSX.Element {
       {/* Navigation */}
       <nav className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="text-2xl font-bold text-primary">Blue Ship Sync</div>
+          <div className="flex items-center space-x-3">
+            <BlueShipSyncLogo size={32} className="text-primary" />
+            <div className="text-2xl font-bold text-primary">Blue Ship Sync</div>
+          </div>
           <div className="space-x-4">
             <Button variant="ghost" asChild>
               <Link href="/auth/login">Login</Link>

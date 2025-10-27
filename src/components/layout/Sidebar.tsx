@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Avatar } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
+import { BlueShipSyncLogo } from '@/components/ui/logo';
 import { cn } from '@/lib/utils';
 import {
   Warehouse,
@@ -84,14 +85,17 @@ export function Sidebar({ className, onNavChange }: SidebarProps) {
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-border">
         {!isCollapsed && (
-          <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-sm">BS</span>
-            </div>
+          <div className="flex items-center space-x-3">
+            <BlueShipSyncLogo size={32} className="text-primary" />
             <div>
               <h1 className="font-semibold text-sm">Blue Ship Sync</h1>
               <p className="text-xs text-muted-foreground">Logistics Platform</p>
             </div>
+          </div>
+        )}
+        {isCollapsed && (
+          <div className="flex justify-center">
+            <BlueShipSyncLogo size={24} className="text-primary" />
           </div>
         )}
         <Button
